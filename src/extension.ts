@@ -24,13 +24,11 @@ export function activate(context: vscode.ExtensionContext): void {
   statusBar.update(store.state);
 
   const viewProvider = new UsagePanelViewProvider(context.extensionUri, store);
-  for (const viewId of ['quotaDeck.viewSidebar', 'quotaDeck.viewPanel']) {
-    context.subscriptions.push(
-      vscode.window.registerWebviewViewProvider(viewId, viewProvider, {
-        webviewOptions: { retainContextWhenHidden: true },
-      })
-    );
-  }
+  context.subscriptions.push(
+    vscode.window.registerWebviewViewProvider('quotaDeck.viewSidebar', viewProvider, {
+      webviewOptions: { retainContextWhenHidden: true },
+    })
+  );
 
   const refresh = (id: ProviderId) => (): void => {
     void store.refresh(id);

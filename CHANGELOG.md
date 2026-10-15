@@ -2,6 +2,16 @@
 
 本檔案格式依循 [Keep a Changelog](https://keepachangelog.com/zh-TW/1.1.0/)，版本編號依循 [Semantic Versioning](https://semver.org/lang/zh-TW/)。
 
+## [0.1.6] — 2026-10-15
+
+### Added
+
+- 面板底部、狀態列提示與記錄檔顯示擴充套件版本。
+
+### Changed
+
+- 移除底部面板（Panel）中的 Quota Deck 檢視，只保留左側活動列的側邊欄；開啟終端機時不會再一起出現。
+
 ## [0.1.5] — 2026-10-13
 
 ### Changed
