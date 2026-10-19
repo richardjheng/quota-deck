@@ -185,7 +185,7 @@ for verbose logging (tokens and credentials are redacted). If a CLI can't be fou
   - `Quota Deck: Open in Editor` 可另外把面板開成中間編輯器區的分頁
 - 每個 provider 一張卡片：登入狀態、帳號、方案、短/長週期百分比、進度條、重置倒數與絕對時刻、資料時間戳與**資料來源**
 - **過期資料一定看得出來**：Claude 與 Codex 的百分比都來自本機快取／紀錄，可能遠早於你按下重新整理的時間。超過 15 分鐘的數字會標上「過期」徽章、百分比前面加 `~`、進度條變成半透明條紋，並在該列直接寫出「數據時間」。狀態列與 tooltip 同樣會加 `~` 與舊值時間。這是刻意設計——寧可讓你知道數字舊了，也不要讓一個五小時前的快照看起來像當下值。
-- Antigravity 額外分開顯示 **Claude 池 / Gemini 池**（兩者是完全獨立的配額池）以及 prompt / flow credits
+- Antigravity 額外分開顯示 **Claude 池 / Gemini 4 Argon 池 / Gemini 3.8 Flash 池**（各自為獨立計算的配額池）以及 prompt / flow credits
 - 未登入時卡片變 dimmed 並提供「登入」按鈕（在 integrated terminal 執行對應指令）
 - 未安裝 CLI 時顯示「未偵測到 CLI」與安裝連結
 - 單一狀態列摘要項目，tooltip 列出三家概況
@@ -262,7 +262,7 @@ for verbose logging (tokens and credentials are redacted). If a CLI can't be fou
 請求必須帶 header **`x-codeium-csrf-token`**，否則會得到 `401 {"code":"unauthenticated","message":"missing CSRF token"}`。
 
 `GetUserStatus` 回傳 `name` / `email` / `planName` / `userTier`，以及
-`cascadeModelConfigData.clientModelConfigs[].quotaInfo{remainingFraction, resetTime}`——這就是各模型的獨立配額，本套件依模型家族分成 **Claude 池 / Gemini 池 / GPT-OSS 池** 顯示，池內以剩餘量最少的模型為代表。
+`cascadeModelConfigData.clientModelConfigs[].quotaInfo{remainingFraction, resetTime}`——這就是各模型的獨立配額，本套件依模型系列分成 **Claude 池 / Gemini 4 Argon 池 / Gemini 3.8 Flash 池 / GPT-OSS 池** 顯示，池內以剩餘量最少的模型為代表。
 
 **限制與注意事項**：
 

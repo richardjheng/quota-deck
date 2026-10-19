@@ -37,6 +37,7 @@ async function scanWindows(nameHints: readonly string[], timeoutMs: number): Pro
   }
   const filter = safe.map((n) => `Name='${n}'`).join(' OR ');
   const script =
+    '[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; ' +
     `Get-CimInstance Win32_Process -Filter "${filter}" | ` +
     'Select-Object ProcessId,Name,CommandLine | ConvertTo-Json -Compress -Depth 3';
 
@@ -52,7 +53,8 @@ async function scanWindows(nameHints: readonly string[], timeoutMs: number): Pro
   let parsed: unknown;
   try {
     parsed = JSON.parse(r.stdout);
-  } catch {
+  } catch (err) {
+    logger.debug(`scanWindows JSON.parse 失敗：${err instanceof Error ? err.message : String(err)}`);
     return [];
   }
   const rows = Array.isArray(parsed) ? parsed : [parsed];

@@ -146,8 +146,10 @@ async function findHubEndpoints(timeoutMs: number): Promise<Endpoint[]> {
     }
   }
 
+  const livePids = new Set(procs.map((p) => p.pid));
   for (const d of readDiscoveryFiles()) {
-    if (!isPidAlive(d.pid)) {
+    const alive = livePids.size > 0 ? livePids.has(d.pid) : isPidAlive(d.pid);
+    if (!alive) {
       continue;
     }
     if (d.httpPort) {
@@ -280,10 +282,10 @@ function buildSnapshot(us: Record<string, unknown>, ep: Endpoint, now: Date): Us
     fetchedAt: now,
     source: `loopback:${ep.protocol}:${ep.port}/GetUserStatus (${ep.origin})`,
     message: t(
-      'Claude 與 Gemini 是完全獨立的配額池，重置時刻也不同，請分開看。' +
+      'Claude、Gemini 4 Argon 與 Gemini 3.8 Flash 是各自獨立計算的配額池，重置時刻也不同，請分開看。' +
         'Antigravity 的本機端點只提供上面這些滾動視窗，沒有回傳每週 baseline 硬上限；' +
         '撞到週上限時滾動視窗會失效並鎖到下週，但那個數字無法從本機取得，本套件不會憑空推估。',
-      'Claude and Gemini are fully separate quota pools with different reset times; read them separately. ' +
+      'Claude, Gemini 4 Argon, and Gemini 3.8 Flash are separate quota pools with different reset times; read them separately. ' +
         "Antigravity's local endpoint only reports the rolling windows above, not the weekly baseline cap. " +
         'Hitting the weekly cap locks the rolling windows until next week, but that number is not available locally and this extension will not guess it.'
     ),
@@ -297,7 +299,7 @@ interface ModelQuota {
   resetTime: Date | null;
 }
 
-/** 依模型家族分池（Claude / Gemini / 其他），池內取剩餘量最少的模型當代表。 */
+/** 依模型配額池分組（Claude / Gemini 4 Argon / Gemini 3.8 Flash / GPT-OSS 等），池內取剩餘量最少的模型當代表。 */
 export function buildModelPools(us: Record<string, unknown>): UsageWindow[] {
   const cfgData = asRecord(us['cascadeModelConfigData']);
   const raw = cfgData?.['clientModelConfigs'];
@@ -333,7 +335,7 @@ export function buildModelPools(us: Record<string, unknown>): UsageWindow[] {
     }
   }
 
-  const order = ['Claude', 'Gemini', 'GPT-OSS'];
+  const order = ['Claude', 'Gemini 4 Argon', 'Gemini 3.8 Flash', 'Gemini', 'GPT-OSS'];
   const sortedKeys = [...pools.keys()].sort((a, b) => {
     const ia = order.indexOf(a);
     const ib = order.indexOf(b);
@@ -376,6 +378,12 @@ function familyOf(modelId: string, label: string): string {
     return 'Claude';
   }
   if (hay.includes('gemini')) {
+    if (hay.includes('argon')) {
+      return 'Gemini 4 Argon';
+    }
+    if (hay.includes('flash')) {
+      return 'Gemini 3.8 Flash';
+    }
     return 'Gemini';
   }
   if (hay.includes('gpt-oss') || hay.includes('gpt_oss') || hay.includes('openai')) {

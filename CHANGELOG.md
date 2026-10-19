@@ -2,7 +2,7 @@
 
 本檔案格式依循 [Keep a Changelog](https://keepachangelog.com/zh-TW/1.1.0/)，版本編號依循 [Semantic Versioning](https://semver.org/lang/zh-TW/)。
 
-## [0.1.6] — 2026-10-15
+## [0.1.6] — 2026-10-19
 
 ### Added
 
@@ -11,6 +11,12 @@
 ### Changed
 
 - 移除底部面板（Panel）中的 Quota Deck 檢視，只保留左側活動列的側邊欄；開啟終端機時不會再一起出現。
+- Google Antigravity 的 Gemini 模型配額分拆為 **Gemini 4 Argon 配額池** 與 **Gemini 3.8 Flash 配額池** 兩條獨立視窗，各自顯示獨立的剩餘百分比與重置時刻。
+
+### Fixed
+
+- Windows 下掃描 `agy.exe` 程序時強制 PowerShell 以 UTF-8 輸出（`[Console]::OutputEncoding = [System.Text.Encoding]::UTF8`），避免背景 `agy.exe -p` 含中文字元（如 Big5 低位元組 `0x5C` `\`）時破壞 `ConvertTo-Json` 輸出、導致 `JSON.parse` 失敗而漏掃執行中的 hub。
+- 驗證 Antigravity `daemon/ls_*.json` discovery file 時優先比對實際掃描到的 `agy` / `language_server` PID，避免因舊 PID 被系統重用而誤連已關閉的端點（`ECONNREFUSED`）。
 
 ## [0.1.5] — 2026-10-13
 
