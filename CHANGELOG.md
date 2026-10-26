@@ -2,6 +2,13 @@
 
 本檔案格式依循 [Keep a Changelog](https://keepachangelog.com/zh-TW/1.1.0/)，版本編號依循 [Semantic Versioning](https://semver.org/lang/zh-TW/)。
 
+## [0.1.7] — 2026-10-27
+
+### Fixed
+
+- Antigravity 模型配額耗盡時，若本機端點只回傳有效的 `resetTime` 並省略 `remainingFraction`，配額池會正確顯示剩餘 0%（已使用 100%），不再消失或採用同池其他模型的較高剩餘量。
+- 當 Antigravity 的 `planStatus` 存在時，省略的 Prompt／Flow 可用額度以 0 顯示，不再顯示未知值或隱藏該項目。
+
 ## [0.1.6] — 2026-10-19
 
 ### Added

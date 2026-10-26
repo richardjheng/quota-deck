@@ -2,7 +2,7 @@
   "name": "ai-usage-panel",
   "displayName": "Quota Deck — Claude Code, Codex & Antigravity Usage",
   "description": "%extension.description%",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "publisher": "richard-jheng",
   "license": "MIT",
   "repository": {

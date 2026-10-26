@@ -1,5 +1,9 @@
 .vscode/**
 .vscode-test/**
+.agents/**
+.agora/**
+.claude/**
+AGENTS.md
 src/**
 out/**
 node_modules/**

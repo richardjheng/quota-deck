@@ -252,7 +252,13 @@ function buildSnapshot(us: Record<string, unknown>, ep: Endpoint, now: Date): Us
 
   // Prompt / Flow credits：available 與 monthly 是兩個不同意義的欄位，
   // 這裡照原樣顯示，不去推導一個可能誤導的百分比。
-  const availablePrompt = asNumber(planStatus?.['availablePromptCredits']);
+  // proto3 JSON 在數值為 0 時會省略欄位；若 planStatus 存在但缺少欄位，應視為 0。
+  const availablePrompt =
+    planStatus && 'availablePromptCredits' in planStatus
+      ? asNumber(planStatus['availablePromptCredits'])
+      : planStatus
+        ? 0
+        : null;
   const monthlyPrompt = asNumber(planInfo?.['monthlyPromptCredits']);
   if (availablePrompt !== null || monthlyPrompt !== null) {
     windows.push({
@@ -262,7 +268,12 @@ function buildSnapshot(us: Record<string, unknown>, ep: Endpoint, now: Date): Us
       raw: creditsText(availablePrompt, monthlyPrompt),
     });
   }
-  const availableFlow = asNumber(planStatus?.['availableFlowCredits']);
+  const availableFlow =
+    planStatus && 'availableFlowCredits' in planStatus
+      ? asNumber(planStatus['availableFlowCredits'])
+      : planStatus
+        ? 0
+        : null;
   const monthlyFlow = asNumber(planInfo?.['monthlyFlowCredits']);
   if (availableFlow !== null || monthlyFlow !== null) {
     windows.push({
@@ -316,11 +327,24 @@ export function buildModelPools(us: Record<string, unknown>): UsageWindow[] {
     const quotaInfo = asRecord(rec['quotaInfo']);
     const resetRaw = quotaInfo?.['resetTime'];
     const reset = typeof resetRaw === 'string' ? new Date(resetRaw) : null;
+    const validReset = reset && !Number.isNaN(reset.getTime()) ? reset : null;
+
+    // proto3 JSON 在數值為預設值 0（或 0.0）時會省略該欄位。
+    // 當某個模型的配額用盡（剩餘 0%）時，hub 回傳的 quotaInfo 只有 resetTime，
+    // 沒有 remainingFraction 欄位。若有 resetTime，缺少的 remainingFraction 應視為 0。
+    const parsedRf = asNumber(quotaInfo?.['remainingFraction']);
+    const remainingFraction =
+      parsedRf !== null
+        ? parsedRf
+        : validReset !== null
+          ? 0
+          : null;
+
     quotas.push({
       label: typeof rec['label'] === 'string' ? rec['label'] : '(unknown)',
       modelId: typeof rec['modelId'] === 'string' ? rec['modelId'] : '',
-      remainingFraction: asNumber(quotaInfo?.['remainingFraction']),
-      resetTime: reset && !Number.isNaN(reset.getTime()) ? reset : null,
+      remainingFraction,
+      resetTime: validReset,
     });
   }
 
