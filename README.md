@@ -12,7 +12,7 @@
 
 **需求**：VSCode `1.90.0` 或更新版本。
 
-1. 到 [Releases](https://github.com/ITE-Richard/quota-deck/releases/latest) 下載 `quota-deck-0.1.7.vsix`。
+1. 到 [Releases](https://github.com/richardjheng/quota-deck/releases/latest) 下載 `quota-deck-0.1.7.vsix`。
 2. 用下列任一種方式安裝：
 
    **方式 A — VSCode 介面**
@@ -45,7 +45,7 @@
 
 **Requires** VSCode `1.90.0` or newer.
 
-1. Download `quota-deck-0.1.7.vsix` from the [latest release](https://github.com/ITE-Richard/quota-deck/releases/latest).
+1. Download `quota-deck-0.1.7.vsix` from the [latest release](https://github.com/richardjheng/quota-deck/releases/latest).
 2. Install it in any of these ways:
 
    **Option A — VSCode UI**

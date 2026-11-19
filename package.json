@@ -7,12 +7,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ITE-Richard/quota-deck.git"
+    "url": "https://github.com/richardjheng/quota-deck.git"
   },
   "bugs": {
-    "url": "https://github.com/ITE-Richard/quota-deck/issues"
+    "url": "https://github.com/richardjheng/quota-deck/issues"
   },
-  "homepage": "https://github.com/ITE-Richard/quota-deck#readme",
+  "homepage": "https://github.com/richardjheng/quota-deck#readme",
   "engines": {
     "vscode": "^1.90.0"
   },
